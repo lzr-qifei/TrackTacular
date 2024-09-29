@@ -107,6 +107,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 *.ckpt
+*.pth
 MANIFEST
 
 # PyInstaller
