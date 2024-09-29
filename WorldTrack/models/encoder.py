@@ -93,7 +93,8 @@ class Encoder_res50(nn.Module):
     def __init__(self, C):
         super().__init__()
         self.C = C
-        resnet = torchvision.models.resnet50(weights=torchvision.models.ResNet50_Weights.DEFAULT)
+        resnet = torchvision.models.resnet50(pretrained=False)
+        resnet.load_state_dict(torch.load('/home/mnt/lizirui/checkpoint/resnet50-0676ba61.pth'))
         freeze_bn(resnet)
 
         self.layer0 = nn.Sequential(*list(resnet.children())[:4])
@@ -148,9 +149,15 @@ class Encoder_res34(nn.Module):
 
 class Encoder_res18(nn.Module):
     def __init__(self, C):
+        # print('***********************************************')
         super().__init__()
         self.C = C
-        resnet = torchvision.models.resnet18(weights=torchvision.models.ResNet18_Weights.DEFAULT)
+        # resnet = torchvision.models.resnet18(weights=torchvision.models.ResNet18_Weights.DEFAULT)
+        # resnet = torchvision.models.resnet18(weights='/home/mnt/lizirui/TrackTacular/WorldTrack/model_weights/resnet18-f37072fd.pth')
+        # print('***********************************************')
+        resnet = torchvision.models.resnet18()
+        resnet.load_state_dict(torch.load('/home/mnt/lizirui/TrackTacular/WorldTrack/model_weights/resnet18-f37072fd.pth'))
+        # print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
         freeze_bn(resnet)
 
         self.layer0 = nn.Sequential(*list(resnet.children())[:4])

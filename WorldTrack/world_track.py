@@ -10,8 +10,14 @@ from tracking.multitracker import JDETracker
 from utils import vox, basic, decode
 from evaluation.mod import modMetricsCalculator
 from evaluation.mot_bev import mot_metrics
-
-
+import ssl
+import os
+import debugpy
+# debugpy.connect(('10.119.41.22', 5678))
+# os.environ['CUDA_VISIBLE_DEVICES']='1,2'
+ssl._create_default_https_context = ssl._create_unverified_context
+# import pdb
+# torch.cuda.empty_cache()
 class WorldTrackModel(pl.LightningModule):
     def __init__(
             self,
@@ -89,7 +95,7 @@ class WorldTrackModel(pl.LightningModule):
         vox_util: vox util object
         """
         prev_bev = self.load_cache(item['frame'].cpu())
-
+        # print(item['img'].shape)
         output = self.model(
             rgb_cams=item['img'],
             pix_T_cams=item['intrinsic'],
@@ -261,7 +267,8 @@ class WorldTrackModel(pl.LightningModule):
         xy_e, xy_prev_e, scores_e, classes_e, sizes_e, rzs_e = decode.decoder(
             center_e.sigmoid(), offset_e, size_e, rz_e=rot_e, K=self.max_detections
         )
-
+        #TODO: 看一下xy_prev和上一帧的xy是不是一样
+        
         mem_xyz = torch.cat((xy_e, torch.zeros_like(xy_e[..., 0:1])), dim=2)
         ref_xy = self.vox_util.Mem2Ref(mem_xyz, self.Y, self.Z, self.X)[..., :2]
 
@@ -281,6 +288,8 @@ class WorldTrackModel(pl.LightningModule):
                 zip(item['sequence_num'], item['frame'], item['grid_gt'], ref_xy.cpu(), ref_xy_prev.cpu(),
                     scores_e.cpu())):
             frame = int(frame.item())
+            print('bev: ',bev_det)
+            print('bev_prev: ',bev_prev)
             output_stracks = self.test_tracker.update(bev_det, bev_prev, score)
 
             self.mota_gt_list.extend([[seq_num.item(), frame, i.item(), -1, -1, -1, -1, 1, x.item(),  y.item(), -1]
@@ -290,8 +299,8 @@ class WorldTrackModel(pl.LightningModule):
                                         for s in output_stracks])
 
     def on_test_epoch_end(self):
-        log_dir = self.trainer.log_dir if self.trainer.log_dir is not None else '../data/cache'
-
+        # log_dir = self.trainer.log_dir if self.trainer.log_dir is not None else '/home/mnt/lizirui/TrackTacular/WorldTrack/output/mvx_mvdet'
+        log_dir ='/home/mnt/lizirui/TrackTacular/WorldTrack/output/mvx_5cams/mvdet'
         # detection
         pred_path = osp.join(log_dir, 'moda_pred.txt')
         gt_path = osp.join(log_dir, 'moda_gt.txt')
@@ -323,14 +332,14 @@ class WorldTrackModel(pl.LightningModule):
         center_g = target['center_bev']
 
         # save plots to tensorboard in eval loop
-        writer = self.logger.experiment
+        # writer = self.logger.experiment
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 8))
         ax1.imshow(center_g[-1].amax(0).sigmoid().squeeze().cpu().numpy())
         ax2.imshow(center_e[-1].amax(0).sigmoid().squeeze().cpu().numpy())
         ax1.set_title('center_g')
         ax2.set_title('center_e')
         plt.tight_layout()
-        writer.add_figure(f'plot/{batch_idx}', fig, global_step=self.global_step)
+        # writer.add_figure(f'plot/{batch_idx}', fig, global_step=self.global_step)
         plt.close(fig)
 
     def configure_optimizers(self):
@@ -354,5 +363,5 @@ if __name__ == '__main__':
             parser.link_arguments("model.bounds", "data.init_args.bounds")
             parser.link_arguments("trainer.accumulate_grad_batches", "data.init_args.accumulate_grad_batches")
 
-
+    # pdb.set_trace()
     cli = MyLightningCLI(WorldTrackModel)

@@ -18,7 +18,8 @@ class MultiviewX(VisionDataset):
         # MultiviewX has consistent unit: meter (m) for calibration & pos annotation
         self.__name__ = 'MultiviewX'
         self.img_shape, self.worldgrid_shape = [1080, 1920], [640, 1000]  # H,W; N_row,N_col
-        self.num_cam, self.num_frame = 6, 400
+        # self.num_cam, self.num_frame = 6, 400
+        self.num_cam, self.num_frame = 5, 400
         self.frame_step = 1
         # world x,y correspond to w,h
         self.worldcoord_from_worldgrid_mat = np.array([[0.025, 0, 0], [0, 0.025, 0], [0, 0, 1]])

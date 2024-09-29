@@ -10,7 +10,8 @@ from models.encoder import freeze_bn, UpsamplingConcat
 class Decoder(nn.Module):
     def __init__(self, in_channels, n_classes, feat2d=128):
         super().__init__()
-        backbone = torchvision.models.resnet18(weights=torchvision.models.ResNet18_Weights.DEFAULT)
+        backbone = torchvision.models.resnet18()
+        backbone.load_state_dict(torch.load('/home/mnt/lizirui/TrackTacular/WorldTrack/model_weights/resnet18-f37072fd.pth'))
         freeze_bn(backbone)
         self.first_conv = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
         self.bn1 = backbone.bn1

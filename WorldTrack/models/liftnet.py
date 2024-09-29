@@ -22,6 +22,7 @@ class Liftnet(nn.Module):
                  feat2d_dim=96,
                  encoder_type='swin_t',
                  z_sign=1,
+                 device = torch.device('cuda')
                  ):
         super(Liftnet, self).__init__()
         assert (encoder_type in ['res101', 'res50', 'res18', 'effb0', 'effb4', 'swin_t'])
@@ -36,9 +37,10 @@ class Liftnet(nn.Module):
         self.num_cameras = num_cameras
         self.z_sign = z_sign
 
-        self.mean = torch.as_tensor([0.485, 0.456, 0.406]).reshape(1, 3, 1, 1).float().cuda()
-        self.std = torch.as_tensor([0.229, 0.224, 0.225]).reshape(1, 3, 1, 1).float().cuda()
-
+        # self.mean = torch.as_tensor([0.485, 0.456, 0.406]).reshape(1, 3, 1, 1).float().cuda()
+        # self.std = torch.as_tensor([0.229, 0.224, 0.225]).reshape(1, 3, 1, 1).float().cuda()
+        self.mean = torch.as_tensor([0.485, 0.456, 0.406]).reshape(1, 3, 1, 1).float().to(device)
+        self.std = torch.as_tensor([0.229, 0.224, 0.225]).reshape(1, 3, 1, 1).float().to(device)
         # Encoder
         self.feat2d_dim = feat2d_dim
         if encoder_type == 'res101':

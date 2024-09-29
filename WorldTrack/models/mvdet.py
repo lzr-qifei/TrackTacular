@@ -114,7 +114,7 @@ class MVDet(nn.Module):
         # B*S,latent_dim,Y,X
         feat_mems_ = warp_perspective(feat_cams_, proj_mats, (self.Y, self.X), align_corners=False)
         feat_mems = __u(feat_mems_)  # B,S,latent_dim,Y,X
-
+        
         # bev_img_ = warp_perspective(rgb_cams_, proj_mats, (self.Y, self.X), align_corners=False)
         # bev_img = __u(bev_img_)
         # import matplotlib.pyplot as plt

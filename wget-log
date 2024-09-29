@@ -1,0 +1,15 @@
+--2024-04-25 11:14:05--  https://webdisk.ads.mwn.de/Handlers/AnonymousDownload.ashx?folder=18e2eac4
+Resolving webdisk.ads.mwn.de (webdisk.ads.mwn.de)... 129.187.255.203, 2001:4ca0:0:103::81bb:ffcb
+Connecting to webdisk.ads.mwn.de (webdisk.ads.mwn.de)|129.187.255.203|:443... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: ?folder=00a74ddc [following]
+--2024-04-25 11:14:07--  https://webdisk.ads.mwn.de/Handlers/AnonymousDownload.ashx?folder=00a74ddc
+Reusing existing connection to webdisk.ads.mwn.de:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 11104 (11K) [text/html]
+Saving to: ‘AnonymousDownload.ashx?folder=18e2eac4’
+
+AnonymousDownload.ashx?folder=18e2eac4       0%[                                                                                      ]       0  --.-KB/s               AnonymousDownload.ashx?folder=18e2eac4     100%[=====================================================================================>]  10.84K  --.-KB/s    in 0.001s  
+
+2024-04-25 11:14:09 (18.3 MB/s) - ‘AnonymousDownload.ashx?folder=18e2eac4’ saved [11104/11104]
+
